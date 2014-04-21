@@ -32,7 +32,7 @@ class Client:
                              headers=self.headers,
                              data=json.dumps(payload))
 
-        if resp.status_code == 200:
+        if resp.status_code != 201:
             raise ClientException(resp.reason)
 
         data = resp.json()
