@@ -24,7 +24,13 @@ def user_create(*args, **kwargs):
     name = kwargs.pop('user_name')
     email = kwargs.pop('user_email')
     password = kwargs.pop('user_password')
-    return client.create_user(name=name, email=email, password=password)
+    create_group = kwargs.pop('create_group')
+
+    u_resp = client.create_user(name=name, email=email, password=password)
+    if create_group:
+        g_resp = client.create_group(name)
+        client.add_to_group(g_resp['id'], u_resp['id'])
+    return client.user(u_resp['id'])
 
 
 def user_show(*args, **kwargs):
@@ -142,6 +148,8 @@ def main(args):
     parser_user_create.add_argument('--user-name', required=True)
     parser_user_create.add_argument('--user-email', required=True)
     parser_user_create.add_argument('--user-password', required=True)
+    parser_user_create.add_argument('--create-group', action='store_true',
+                                    default=False)
     parser_user_create.set_defaults(func=user_create)
 
     parser_user_show = subparsers.add_parser('user-show')
