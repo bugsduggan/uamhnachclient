@@ -139,12 +139,14 @@ def main(args):
     parser.add_argument('-p', '--password',
                         default=os.environ.get('UAMHNACH_PASSWORD', None))
 
-    subparsers = parser.add_subparsers(title='Commands')
+    subparsers = parser.add_subparsers(title='Commands', metavar='<command>')
 
-    parser_user_list = subparsers.add_parser('user-list')
+    parser_user_list = subparsers.add_parser('user-list',
+                                             help='Lists all users')
     parser_user_list.set_defaults(func=user_list)
 
-    parser_user_create = subparsers.add_parser('user-create')
+    parser_user_create = subparsers.add_parser('user-create',
+                                               help='Creates a new user')
     parser_user_create.add_argument('--user-name', required=True)
     parser_user_create.add_argument('--user-email', required=True)
     parser_user_create.add_argument('--user-password', required=True)
@@ -152,61 +154,79 @@ def main(args):
                                     default=False)
     parser_user_create.set_defaults(func=user_create)
 
-    parser_user_show = subparsers.add_parser('user-show')
+    parser_user_show = subparsers.add_parser('user-show',
+                                             help='Displays an individual '
+                                                  'user')
     parser_user_show.add_argument('-u', '--user-id', required=True)
     parser_user_show.set_defaults(func=user_show)
 
-    parser_user_update = subparsers.add_parser('user-update')
+    parser_user_update = subparsers.add_parser('user-update',
+                                               help='Updates a user\'s details')
     parser_user_update.add_argument('-u', '--user-id', required=True)
     parser_user_update.add_argument('--user-name')
     parser_user_update.add_argument('--user-email')
     parser_user_update.add_argument('--user-password')
     parser_user_update.set_defaults(func=user_update)
 
-    parser_user_delete = subparsers.add_parser('user-delete')
+    parser_user_delete = subparsers.add_parser('user-delete',
+                                               help='Deletes a user')
     parser_user_delete.add_argument('-u', '--user-id', required=True)
     parser_user_delete.set_defaults(func=user_delete)
 
-    parser_group_list = subparsers.add_parser('group-list')
+    parser_group_list = subparsers.add_parser('group-list',
+                                              help='Lists all groups')
     parser_group_list.set_defaults(func=group_list)
 
-    parser_group_create = subparsers.add_parser('group-create')
+    parser_group_create = subparsers.add_parser('group-create',
+                                                help='Creates a new group')
     parser_group_create.add_argument('--group-name', required=True)
     parser_group_create.set_defaults(func=group_create)
 
-    parser_group_show = subparsers.add_parser('group-show')
+    parser_group_show = subparsers.add_parser('group-show',
+                                              help='Displays an individual '
+                                                   'group')
     parser_group_show.add_argument('-g', '--group-id', required=True)
     parser_group_show.set_defaults(func=group_show)
 
-    parser_group_add_user = subparsers.add_parser('group-add-user')
+    parser_group_add_user = subparsers.add_parser('group-add-user',
+                                                  help='Adds a user to a group')
     parser_group_add_user.add_argument('-g', '--group-id', required=True)
     parser_group_add_user.add_argument('-u', '--user-id', required=True)
     parser_group_add_user.set_defaults(func=group_add_user)
 
-    parser_group_delete_user = subparsers.add_parser('group-delete-user')
+    parser_group_delete_user = subparsers.add_parser('group-delete-user',
+                                                     help='Removes a user '
+                                                          'from a group')
     parser_group_delete_user.add_argument('-g', '--group-id', required=True)
     parser_group_delete_user.add_argument('-u', '--user-id', required=True)
     parser_group_delete_user.set_defaults(func=group_delete_user)
 
-    parser_group_delete = subparsers.add_parser('group-delete')
+    parser_group_delete = subparsers.add_parser('group-delete',
+                                                help='Deletes a group')
     parser_group_delete.add_argument('-g', '--group-id', required=True)
     parser_group_delete.set_defaults(func=group_delete)
 
-    parser_permission_list = subparsers.add_parser('permission-list')
+    parser_permission_list = subparsers.add_parser('permission-list',
+                                                   help='Lists all permissions')
     parser_permission_list.set_defaults(func=permission_list)
 
-    parser_permission_create = subparsers.add_parser('permission-create')
+    parser_permission_create = subparsers.add_parser('permission-create',
+                                                     help='Creates a new '
+                                                          'permission')
     parser_permission_create.add_argument('--permission-name',
                                           required=True)
     parser_permission_create.set_defaults(func=permission_create)
 
-    parser_permission_show = subparsers.add_parser('permission-show')
+    parser_permission_show = subparsers.add_parser('permission-show',
+                                                   help='Displays an '
+                                                        'individual permission')
     parser_permission_show.add_argument('-p', '--permission-id',
                                         required=True)
     parser_permission_show.set_defaults(func=permission_show)
 
     parser_permission_add_group = \
-        subparsers.add_parser('permission-add-group')
+        subparsers.add_parser('permission-add-group',
+                              help='Adds a permission to a group')
     parser_permission_add_group.add_argument('-p', '--permission-id',
                                              required=True)
     parser_permission_add_group.add_argument('-g', '--group-id',
@@ -214,14 +234,17 @@ def main(args):
     parser_permission_add_group.set_defaults(func=permission_add_group)
 
     parser_permission_delete_group = \
-        subparsers.add_parser('permission-delete-group')
+        subparsers.add_parser('permission-delete-group',
+                              help='Removes a permission from a group')
     parser_permission_delete_group.add_argument('-p', '--permission-id',
                                                 required=True)
     parser_permission_delete_group.add_argument('-g', '--group-id',
                                                 required=True)
     parser_permission_delete_group.set_defaults(func=permission_delete_group)
 
-    parser_permission_delete = subparsers.add_parser('permission-delete')
+    parser_permission_delete = subparsers.add_parser('permission-delete',
+                                                     help='Deletes a '
+                                                          'permission')
     parser_permission_delete.add_argument('-p', '--permission-id',
                                           required=True)
     parser_permission_delete.set_defaults(func=permission_delete)
