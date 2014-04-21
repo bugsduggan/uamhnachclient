@@ -229,19 +229,107 @@ class Client:
             raise ClientException
 
     def permissions(self):
-        pass
+        headers = self.headers
+        headers['X-Auth-Token'] = self.get_token()
+
+        resp = requests.get('%s/permissions' % self.api_host,
+                            headers=headers)
+
+        if resp.status_code == 401:
+            raise NotAuthorizedException
+        if resp.status_code != 200:
+            raise ClientException(resp.reason)
+
+        data = resp.json()
+        return data
 
     def create_permission(self, permission_name):
-        pass
+        payload = {
+            'name': permission_name,
+        }
+
+        headers = self.headers
+        headers['X-Auth-Token'] = self.get_token()
+
+        resp = requests.post('%s/permissions' % self.api_host,
+                             headers=headers,
+                             data=json.dumps(payload))
+
+        if resp.status_code == 401:
+            raise NotAuthorizedException
+        if resp.status_code != 201:
+            raise ClientException(resp.reason)
+
+        data = resp.json()
+        return data
 
     def permission(self, permission_id):
-        pass
+        headers = self.headers
+        headers['X-Auth-Token'] = self.get_token()
+
+        resp = requests.get('%s/permission/%d' % (self.api_host,
+                                                  permission_id),
+                            headers=headers)
+
+        if resp.status_code == 401:
+            raise NotAuthorizedException
+        if resp.status_code != 200:
+            raise ClientException(resp.reason)
+
+        data = resp.json()
+        return data
 
     def allow_group(self, permission_id, group_id):
-        pass
+        payload = {
+            group_id: 'add',
+        }
+
+        headers = self.headers
+        headers['X-Auth-Token'] = self.get_token()
+
+        resp = requests.put('%s/permission/%d' % (self.api_host,
+                                                  permission_id),
+                            headers=headers,
+                            data=json.dumps(payload))
+
+        if resp.status_code == 401:
+            raise NotAuthorizedException
+        if resp.status_code != 200:
+            raise ClientException(resp.reason)
+
+        data = resp.json()
+        return data
 
     def disallow_group(self, permission_id, group_id):
-        pass
+        payload = {
+            group_id: 'delete',
+        }
+
+        headers = self.headers
+        headers['X-Auth-Token'] = self.get_token()
+
+        resp = requests.put('%s/permission/%d' % (self.api_host,
+                                                  permission_id),
+                            headers=headers,
+                            data=json.dumps(payload))
+
+        if resp.status_code == 401:
+            raise NotAuthorizedException
+        if resp.status_code != 200:
+            raise ClientException(resp.reason)
+
+        data = resp.json()
+        return data
 
     def delete_permission(self, permission_id):
-        pass
+        headers = self.headers
+        headers['X-Auth-Token'] = self.get_token()
+
+        resp = requests.delete('%s/permission/%d' % (self.api_host,
+                                                     permission_id),
+                               headers=headers)
+
+        if resp.status_code == 401:
+            raise NotAuthorizedException
+        if resp.status_code != 200:
+            raise ClientException(resp.reason)

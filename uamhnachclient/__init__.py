@@ -86,6 +86,43 @@ def group_delete(*args, **kwargs):
     client.delete_group(int(group_id))
 
 
+def permission_list(*args, **kwargs):
+    client = get_client(**kwargs)
+    return client.permissions()
+
+
+def permission_create(*args, **kwargs):
+    client = get_client(**kwargs)
+    permission_name = kwargs.pop('permission_name')
+    return client.create_permission(permission_name)
+
+
+def permission_show(*args, **kwargs):
+    client = get_client(**kwargs)
+    permission_id = kwargs.pop('permission_id')
+    return client.permission(int(permission_id))
+
+
+def permission_add_group(*args, **kwargs):
+    client = get_client(**kwargs)
+    permission_id = kwargs.pop('permission_id')
+    group_id = kwargs.pop('group_id')
+    return client.allow_group(int(permission_id), int(group_id))
+
+
+def permission_delete_group(*args, **kwargs):
+    client = get_client(**kwargs)
+    permission_id = kwargs.pop('permission_id')
+    group_id = kwargs.pop('group_id')
+    return client.disallow_group(int(permission_id), int(group_id))
+
+
+def permission_delete(*args, **kwargs):
+    client = get_client(**kwargs)
+    permission_id = kwargs.pop('permission_id')
+    client.delete_permission(int(permission_id))
+
+
 def main(args):
     parser = argparse.ArgumentParser()
 
@@ -146,6 +183,40 @@ def main(args):
     parser_group_delete = subparsers.add_parser('group-delete')
     parser_group_delete.add_argument('-g', '--group-id', required=True)
     parser_group_delete.set_defaults(func=group_delete)
+
+    parser_permission_list = subparsers.add_parser('permission-list')
+    parser_permission_list.set_defaults(func=permission_list)
+
+    parser_permission_create = subparsers.add_parser('permission-create')
+    parser_permission_create.add_argument('--permission-name',
+                                          required=True)
+    parser_permission_create.set_defaults(func=permission_create)
+
+    parser_permission_show = subparsers.add_parser('permission-show')
+    parser_permission_show.add_argument('-p', '--permission-id',
+                                        required=True)
+    parser_permission_show.set_defaults(func=permission_show)
+
+    parser_permission_add_group = \
+        subparsers.add_parser('permission-add-group')
+    parser_permission_add_group.add_argument('-p', '--permission-id',
+                                             required=True)
+    parser_permission_add_group.add_argument('-g', '--group-id',
+                                             required=True)
+    parser_permission_add_group.set_defaults(func=permission_add_group)
+
+    parser_permission_delete_group = \
+        subparsers.add_parser('permission-delete-group')
+    parser_permission_delete_group.add_argument('-p', '--permission-id',
+                                                required=True)
+    parser_permission_delete_group.add_argument('-g', '--group-id',
+                                                required=True)
+    parser_permission_delete_group.set_defaults(func=permission_delete_group)
+
+    parser_permission_delete = subparsers.add_parser('permission-delete')
+    parser_permission_delete.add_argument('-p', '--permission-id',
+                                          required=True)
+    parser_permission_delete.set_defaults(func=permission_delete)
 
     args = parser.parse_args(args)
 
