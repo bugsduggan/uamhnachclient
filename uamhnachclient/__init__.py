@@ -49,6 +49,43 @@ def user_delete(*args, **kwargs):
     client.delete_user(int(user_id))
 
 
+def group_list(*args, **kwargs):
+    client = get_client(**kwargs)
+    return client.groups()
+
+
+def group_create(*args, **kwargs):
+    client = get_client(**kwargs)
+    group_name = kwargs.pop('group_name')
+    return client.create_group(group_name)
+
+
+def group_show(*args, **kwargs):
+    client = get_client(**kwargs)
+    group_id = kwargs.pop('group_id')
+    return client.group(int(group_id))
+
+
+def group_add_user(*args, **kwargs):
+    client = get_client(**kwargs)
+    group_id = kwargs.pop('group_id')
+    user_id = kwargs.pop('user_id')
+    return client.add_to_group(int(group_id), int(user_id))
+
+
+def group_delete_user(*args, **kwargs):
+    client = get_client(**kwargs)
+    group_id = kwargs.pop('group_id')
+    user_id = kwargs.pop('user_id')
+    return client.delete_from_group(int(group_id), int(user_id))
+
+
+def group_delete(*args, **kwargs):
+    client = get_client(**kwargs)
+    group_id = kwargs.pop('group_id')
+    client.delete_group(int(group_id))
+
+
 def main(args):
     parser = argparse.ArgumentParser()
 
@@ -84,6 +121,31 @@ def main(args):
     parser_user_delete = subparsers.add_parser('user-delete')
     parser_user_delete.add_argument('-u', '--user-id', required=True)
     parser_user_delete.set_defaults(func=user_delete)
+
+    parser_group_list = subparsers.add_parser('group-list')
+    parser_group_list.set_defaults(func=group_list)
+
+    parser_group_create = subparsers.add_parser('group-create')
+    parser_group_create.add_argument('--group-name', required=True)
+    parser_group_create.set_defaults(func=group_create)
+
+    parser_group_show = subparsers.add_parser('group-show')
+    parser_group_show.add_argument('-g', '--group-id', required=True)
+    parser_group_show.set_defaults(func=group_show)
+
+    parser_group_add_user = subparsers.add_parser('group-add-user')
+    parser_group_add_user.add_argument('-g', '--group-id', required=True)
+    parser_group_add_user.add_argument('-u', '--user-id', required=True)
+    parser_group_add_user.set_defaults(func=group_add_user)
+
+    parser_group_delete_user = subparsers.add_parser('group-delete-user')
+    parser_group_delete_user.add_argument('-g', '--group-id', required=True)
+    parser_group_delete_user.add_argument('-u', '--user-id', required=True)
+    parser_group_delete_user.set_defaults(func=group_delete_user)
+
+    parser_group_delete = subparsers.add_parser('group-delete')
+    parser_group_delete.add_argument('-g', '--group-id', required=True)
+    parser_group_delete.set_defaults(func=group_delete)
 
     args = parser.parse_args(args)
 

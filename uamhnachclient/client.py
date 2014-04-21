@@ -125,3 +125,123 @@ class Client:
             raise NotAuthorizedException
         if resp.status_code != 200:
             raise ClientException(resp.reason)
+
+    def groups(self):
+        headers = self.headers
+        headers['X-Auth-Token'] = self.get_token()
+
+        resp = requests.get('%s/groups' % self.api_host,
+                            headers=headers)
+
+        if resp.status_code == 401:
+            raise NotAuthorizedException
+        if resp.status_code != 200:
+            raise ClientException(resp.reason)
+
+        data = resp.json()
+        return data
+
+    def create_group(self, group_name):
+        payload = {
+            'name': group_name,
+        }
+
+        headers = self.headers
+        headers['X-Auth-Token'] = self.get_token()
+
+        resp = requests.post('%s/groups' % self.api_host,
+                             headers=headers,
+                             data=json.dumps(payload))
+
+        if resp.status_code == 401:
+            raise NotAuthorizedException
+        if resp.status_code != 201:
+            raise ClientException
+
+        data = resp.json()
+        return data
+
+    def group(self, group_id):
+        headers = self.headers
+        headers['X-Auth-Token'] = self.get_token()
+
+        resp = requests.get('%s/group/%d' % (self.api_host, group_id),
+                            headers=headers)
+
+        if resp.status_code == 401:
+            raise NotAuthorizedException
+        if resp.status_code != 200:
+            raise ClientException(resp.reason)
+
+        data = resp.json()
+        return data
+
+    def add_to_group(self, group_id, user_id):
+        payload = {
+            user_id: 'add',
+        }
+
+        headers = self.headers
+        headers['X-Auth-Token'] = self.get_token()
+
+        resp = requests.put('%s/group/%d' % (self.api_host, group_id),
+                            headers=headers,
+                            data=json.dumps(payload))
+
+        if resp.status_code == 401:
+            raise NotAuthorizedException
+        if resp.status_code != 200:
+            raise ClientException(resp.reason)
+
+        data = resp.json()
+        return data
+
+    def delete_from_group(self, group_id, user_id):
+        payload = {
+            user_id: 'delete',
+        }
+
+        headers = self.headers
+        headers['X-Auth-Token'] = self.get_token()
+
+        resp = requests.put('%s/group/%d' % (self.api_host, group_id),
+                            headers=headers,
+                            data=json.dumps(payload))
+
+        if resp.status_code == 401:
+            raise NotAuthorizedException
+        if resp.status_code != 200:
+            raise ClientException
+
+        data = resp.json()
+        return data
+
+    def delete_group(self, group_id):
+        headers = self.headers
+        headers['X-Auth-Token'] = self.get_token()
+
+        resp = requests.delete('%s/group/%d' % (self.api_host, group_id),
+                               headers=headers)
+
+        if resp.status_code == 401:
+            raise NotAuthorizedException
+        if resp.status_code != 200:
+            raise ClientException
+
+    def permissions(self):
+        pass
+
+    def create_permission(self, permission_name):
+        pass
+
+    def permission(self, permission_id):
+        pass
+
+    def allow_group(self, permission_id, group_id):
+        pass
+
+    def disallow_group(self, permission_id, group_id):
+        pass
+
+    def delete_permission(self, permission_id):
+        pass
