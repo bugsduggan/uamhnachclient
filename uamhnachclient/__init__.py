@@ -129,7 +129,7 @@ def permission_delete(*args, **kwargs):
     client.delete_permission(int(permission_id))
 
 
-def main(args):
+def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-H', '--host',
@@ -249,7 +249,7 @@ def main(args):
                                           required=True)
     parser_permission_delete.set_defaults(func=permission_delete)
 
-    args = parser.parse_args(args)
+    args = parser.parse_args()
 
     if args.host is None:
         raise ClientException('You must specify api_host either via --host ',
